@@ -76,58 +76,35 @@ Client-server chat applications are foundational to real-time communication over
 
 ## Client Program:
 ```
-import socket
-s = socket.socket()
-host = input(str('Enter hostname or host IP : '))
-port= 8080
-s.connect((host, port))
-print('Connected to chat server')
-while 1:
-    incoming_message = s.recv(1024)
-    incoming_message =incoming_message.decode() 
-    print(' Server : ',incoming_message) 
-    print()
-    message = input(str('>> '))
-    message =message.encode()
-    s.send(message)
-    print('Sent')
-    print()
+c,addr=s.accept()
+print("Client Address : ",addr)
+now = datetime.now()
+c.send(now.strftime("%d/%m/%Y %H:%M:%S").encode())
+ack=c.recv(1024).decode()
+if ack:
+    print(ack)
+c.close()
 ```
 
 ## Server Program:
 ```
 import socket
-s = socket.socket()
-host = socket.gethostname()
-print(' Server will start on host : ',host) 
-port = 8080
-s.bind((host, port))
-print()
-print('Waiting for connection')
-print()
-s.listen(1)
-conn, addr = s.accept()
-print(addr, ' Has connected to the server') 
-print()
-while 1:
-    message =input(str('>> '))
-    message =message.encode()
-    conn.send(message) 
-    print('Sent')
-    print()
-    incoming_message = conn.recv(1024)
-    incoming_message = incoming_message.decode()
-    print(' Client : ',incoming_message) 
-    print()
+s=socket.socket()
+s.connect(('localhost',8000))
+print(s.getsockname())
+print(s.recv(1024).decode())
+s.send("acknowledgement recived from the server".encode())
 ```
 
 ## Output:
 
 
-<img width="1808" height="897" alt="Screenshot 2026-05-12 145256" src="https://github.com/user-attachments/assets/1e5bd3ab-98e8-4456-857e-5a2440509367" />
+<img width="1898" height="999" alt="image" src="https://github.com/user-attachments/assets/55aa4b10-ff2a-4538-9faa-9ae595e23836" />
 
 
-<img width="1858" height="948" alt="Screenshot 2026-05-12 145323" src="https://github.com/user-attachments/assets/09238936-97f2-4349-8a9d-11425bbb8c5e" />
+
+<img width="1913" height="999" alt="image" src="https://github.com/user-attachments/assets/e77c6b67-988e-42ae-8d7f-31ec6f3fc81d" />
+
 
 
 
